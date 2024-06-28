@@ -4,7 +4,7 @@ from pathlib import Path
 apiLogger = logging.getLogger(__name__)
 apiLogger.setLevel(logging.DEBUG)
 
-logFile = Path(__file__).parent.parent.parent / "logs/api.log"
+logFile = Path(__file__).parent.parent / "logs/api.log"
 fileHandler = logging.FileHandler(logFile)
 
 dateformat = '%Y-%m-%d %H:%M:%S'
