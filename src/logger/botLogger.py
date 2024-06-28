@@ -12,4 +12,3 @@ formatter = logging.Formatter('%(name)s - %(asctime)s - %(processName)s - %(leve
 
 fileHandler.setFormatter(formatter)
 botLogger.addHandler(fileHandler)
-
