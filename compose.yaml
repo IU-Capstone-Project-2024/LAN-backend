@@ -1,0 +1,63 @@
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - backend
+    links:
+      - backend
+    secrets:
+      - cert.crt
+      - certificate_ca.crt
+      - certificate.crt
+      - certificate.key
+
+  backend:
+    image: ghcr.io/innolan/backend
+    pull_policy: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    env_file:
+      - ".env"
+    environment:
+      - PROD=false
+
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    env_file:
+      - ".env"
+    environment:
+      DEV_DB_NAME: ${DEV_DB_NAME}
+      DEV_DB_USER: ${DEV_DB_USER}
+      DEV_DB_PASSWORD: ${DEV_DB_PASSWORD}
+      DEV_DB_HOST: ${DEV_DB_HOST}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    image: ghcr.io/innolan/frontend
+    pull_policy: always
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+
+secrets:
+  cert.crt:
+    file: ./certs/cert.crt
+  certificate_ca.crt:
+    file: ./certs/certificate_ca.crt
+  certificate.crt:
+    file: ./certs/certificate.crt
+  certificate.key:
+    file: ./certs/certificate.key
+  
